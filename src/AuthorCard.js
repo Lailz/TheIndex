@@ -1,9 +1,10 @@
 import React from 'react';
 
+
 function AuthorCard(props) {
   return (
     <div className="col-4">
-      <a href="#" className="card">
+      <a href="#" className="card" onClick={() => props.select(props.author)}>
         <div className="image">
           <img className="card-img-top img-fluid" src={props.author.imageUrl} />
         </div>

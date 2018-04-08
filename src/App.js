@@ -5,11 +5,23 @@ import axios from 'axios';
 import Sidebar from './Sidebar';
 import Loading from './Loading';
 import AuthorsList from './AuthorsList';
+import AuthorDetail from './AuthorDetail';
 
 
 const instance = axios.create({
-  baseURL: "https://the-index-api.herokuapp.com"
+  baseURL: "http://127.0.0.1:8000/"
+  // baseURL: "https://the-index-api.herokuapp.com"
 });
+
+function isEmpty(obj) {
+    for(var key in obj) {
+        if(obj.hasOwnProperty(key))
+            return false;
+    }
+    return true;
+}
+
+
 
 class App extends Component {
 
@@ -17,9 +29,13 @@ class App extends Component {
     super(props);
     this.state = {
       authors: [],
-      loading: true
-    }
+      loading: true,
+      currentAuthor: {},
+    };
+    this.selectAuthor = this.selectAuthor.bind(this);
+    this.unSelectAuthor = this.unSelectAuthor.bind(this);
   }
+
 
   componentDidMount() {
     instance.get('/api/authors/')
@@ -28,11 +44,34 @@ class App extends Component {
       .catch(err => console.error(err));
   }
 
+  selectAuthor(authors) {
+    this.setState({
+      currentAuthor: authors
+    });
+    axios.get(`/api/authors/${authors.id}`)
+  .then(function(authors){
+      this.setState({currentAuthor: authors.data});
+  })
+  .catch(error => console.error(error));
+  }
+
+  unSelectAuthor(author) {
+    this.setState({
+      currentAuthor: {}
+    })
+  }
+
   getView() {
     if (this.state.loading) {
       return <Loading />
-    } else {
-      return <AuthorsList authors={this.state.authors}/>
+    }
+
+    else if (isEmpty(this.state.currentAuthor)) {
+      return <AuthorsList authors={this.state.authors} select={this.selectAuthor}/>
+    }
+
+    else {
+      return <AuthorDetail currentAuthor={this.state.currentAuthor}/>
     }
   }
 
@@ -41,10 +80,12 @@ class App extends Component {
       <div id="app" className="container-fluid">
         <div className="row">
           <div className="col-2">
-            <Sidebar />
+            <Sidebar select={this.unSelectAuthor}/>
           </div>
           <div className="content col-10">
+
             {this.getView()}
+
           </div>
         </div>
       </div>
