@@ -45,12 +45,10 @@ class App extends Component {
   }
 
   selectAuthor(authors) {
-    this.setState({
-      currentAuthor: authors
-    });
-    axios.get(`/api/authors/${authors.id}`)
+    let self = this;
+    axios.get('http://localhost:8000/api/authors/'+ authors.id)
   .then(function(authors){
-      this.setState({currentAuthor: authors.data});
+      self.setState({currentAuthor: authors.data});
   })
   .catch(error => console.error(error));
   }
