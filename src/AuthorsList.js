@@ -1,6 +1,7 @@
 import React from 'react';
 
 import AuthorCard from './AuthorCard';
+import SearchBar from './SearchBar';
 
 function AuthorsList(props) {
 
@@ -11,6 +12,7 @@ function AuthorsList(props) {
   return (
     <div className="authors">
       <h3>Authors</h3>
+      <SearchBar search={props.search} authors={props.authors} />
       <div className="row">
         {authors}
       </div>

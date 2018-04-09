@@ -31,9 +31,11 @@ class App extends Component {
       authors: [],
       loading: true,
       currentAuthor: {},
+      filteredAuthors: [],
     };
     this.selectAuthor = this.selectAuthor.bind(this);
     this.unSelectAuthor = this.unSelectAuthor.bind(this);
+    this.searchAuthor = this.searchAuthor.bind(this);
   }
 
   componentDidMount() {
@@ -55,7 +57,17 @@ class App extends Component {
 
   unSelectAuthor(author) {
     this.setState({
-      currentAuthor: {}
+      currentAuthor: {},
+      filteredAuthors: []
+    })
+  }
+
+  searchAuthor(query) {
+    let filters = this.state.authors.filter(function(authorTofilter) {
+      return (authorTofilter.first_name.includes(query) + authorTofilter.last_name.includes(query));
+    });
+    this.setState({
+      filteredAuthors: filters
     })
   }
 
@@ -63,13 +75,14 @@ class App extends Component {
     if (this.state.loading) {
       return <Loading />
     }
-
-    else if (isEmpty(this.state.currentAuthor)) {
-      return <AuthorsList authors={this.state.authors} select={this.selectAuthor}/>
+    else if (isEmpty(this.state.currentAuthor) && isEmpty(this.state.filteredAuthors)) {
+      return <AuthorsList authors={this.state.authors} select={this.selectAuthor} search={this.searchAuthor}/>
     }
-
-    else {
-      return <AuthorDetail currentAuthor={this.state.currentAuthor}/>
+    else if (!isEmpty(this.state.currentAuthor)) {
+      return <AuthorDetail currentAuthor={this.state.currentAuthor} />
+    }
+    else if (!isEmpty(this.state.filteredAuthors)) {
+      return <AuthorsList authors={this.state.filteredAuthors} select={this.selectAuthor} search={this.searchAuthor}/>
     }
   }
 
@@ -77,6 +90,7 @@ class App extends Component {
     return (
       <div id="app" className="container-fluid">
         <div className="row">
+
           <div className="col-2">
             <Sidebar select={this.unSelectAuthor}/>
           </div>
