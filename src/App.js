@@ -36,7 +36,6 @@ class App extends Component {
     this.unSelectAuthor = this.unSelectAuthor.bind(this);
   }
 
-
   componentDidMount() {
     instance.get('/api/authors/')
       .then(res => res.data)
@@ -45,12 +44,13 @@ class App extends Component {
   }
 
   selectAuthor(authors) {
-    let self = this;
-    axios.get('http://localhost:8000/api/authors/'+ authors.id)
-  .then(function(authors){
-      self.setState({currentAuthor: authors.data});
-  })
-  .catch(error => console.error(error));
+    //let self = this;
+    axios.get(`http://localhost:8000/api/authors/${authors.id}/`)
+    .then(authors => this.setState({
+      currentAuthor: authors.data,
+      loading: false
+    }))
+    .catch(error => console.error(error));
   }
 
   unSelectAuthor(author) {
