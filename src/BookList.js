@@ -21,7 +21,6 @@ function BookList(props) {
                 <button className="btn">All Books</button>
               </Link>}
               <BookTable books={bookColor ? books.filter(book => book.color === bookColor) : books} />
-              {/* <BookTable books={props.bookStore.books} /> */}
             </div>
   );
 }
