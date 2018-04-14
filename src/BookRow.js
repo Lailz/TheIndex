@@ -1,5 +1,6 @@
 import React from 'react';
 import {Link} from 'react-router-dom';
+import {observer} from 'mobx-react';
 
 function BookRow(props) {
   const book = props.book
@@ -8,11 +9,12 @@ function BookRow(props) {
       author => <Link key={author.name} to={`/authors/${author.id}`}>{author.name}</Link>
     )
     .reduce((prev, curr) => [prev, ', ', curr]);
+
   return (
     <tr>
       <td>
         <button className={`btn btn-${book.available ? 'success' : 'danger'}`}
-                onClick={() => alert("You need to make me work work work work work")}>
+                onClick={() => book.available = !book.available}>
           {book.available ? 'borrow' : 'return'}
         </button>
       </td>
@@ -27,4 +29,4 @@ function BookRow(props) {
   );
 }
 
-export default BookRow;
+export default observer(BookRow);

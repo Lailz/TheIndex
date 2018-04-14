@@ -26,9 +26,9 @@ class AuthorStore {
         .includes(this.query);
       });
     }
-
     return [];
   }
+
 
   getAuthorById(id) {
     return this.authors.find(author => author.id == id);
